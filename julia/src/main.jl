@@ -20,6 +20,8 @@ setparameter(my_model, :agriculture, :theta, Number[.2, .3, .5, .7, .8])
 # To be optimized
 setparameter(my_model, :agriculture, :fertilizer, Number[1. for i in 1:5]) # [1339430. for i in 1:5])
 
+@time run(my_model)
+
 #=
 println("Checking model...")
 run(my_model)
@@ -47,8 +49,7 @@ constraints = [model -> sum(model.components[:agriculture].Parameters.fertilizer
 println("Setup...")
 optprob = problem(my_model, [:agriculture], [:fertilizer], [0.], [1e6], objective, constraints=constraints)
 println("Solve...")
-##(minf, minx) = solution(opt, () -> rand() < .5 ? [1339430. for i in 1:5] : [0. for i in 1:5]) #, verbose=true)
-(maxf, maxx) = solution(optprob, () -> [0. for i in 1:5])
+(maxf, maxx) = solution(optprob, () -> [1 for i in 1:5]) # Don't evaluate grad at 0
 
 println(maxf)
 println(maxx)
